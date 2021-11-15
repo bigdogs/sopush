@@ -21,7 +21,7 @@ fn main() {
     info!("pkg: {:?}, file: {:?}", pkg, so_file);
 
     let app_lib = adb::app_lib_location(pkg).unwrap();
-    let app_so_lib = format!("{}/lib/{}", app_lib, args::jni_name());
+    let app_so_lib = format!("{}/lib/{}", app_lib, args::app_arch());
     adb::push(so_file, &[&app_so_lib, &format!("/data/data/{}/lib", pkg)]).unwrap();
     info!("done!  cost={:.2?}", start.elapsed());
 }

@@ -34,10 +34,17 @@ pub(crate) enum Arch {
 }
 
 impl Arch {
-    fn jni_name(&self) -> &str {
+    fn aar_jni_name(&self) -> &str {
         match self {
             Arch::Arm => "armeabi-v7a",
             Arch::Arm64 => "arm64-v8a",
+        }
+    }
+
+    fn arch(&self) -> &str {
+        match self {
+            Arch::Arm => "arm",
+            Arch::Arm64 => "arm64",
         }
     }
 }
@@ -63,7 +70,7 @@ static INNER: Lazy<Inner> = Lazy::new(|| {
         let aar_name = opt.aar_name.expect("--aar-name is missing?");
         let aar_path = find_file_at_cur_dir(&aar_name)
             .expect(&format!("{} is not found at current dir", aar_name));
-        extract_so(&aar_path, arch.jni_name()).unwrap()
+        extract_so(&aar_path, arch.aar_jni_name()).unwrap()
     } else {
         PathBuf::from(opt.so_path.expect("so file is not specified"))
     };
@@ -118,6 +125,6 @@ pub(crate) fn local_lib() -> &'static Path {
     &INNER.lib_path
 }
 
-pub(crate) fn jni_name() -> &'static str {
-    &INNER.arch.jni_name()
+pub(crate) fn app_arch() -> &'static str {
+    &INNER.arch.arch()
 }
